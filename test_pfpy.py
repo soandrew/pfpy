@@ -1,8 +1,6 @@
 import unittest
 from random import randint, sample
-from math import factorial, exp
-from operator import gt
-from functools import partial
+from math import factorial, exp, sqrt
 from pfpy import *
 
 class FunctionTestCase(unittest.TestCase):
@@ -77,8 +75,7 @@ class FunctionTestCase(unittest.TestCase):
     def test_vector_space(self):
         f, g, x, c, d = self.f, Function(self.g), self.x, self.c, self.d
 
-        @unary
-        def h(x): return x ** 2
+        h = Function(lambda x: x ** 2)
 
         self.assertIs(type(f + g), Function)                        # Additive closure
         self.assertIs(type(c * f), Function)                        # Scalar closure
@@ -96,35 +93,43 @@ class FunctionTestCase(unittest.TestCase):
         my_exp = sum(series)
         self.assertAlmostEqual(my_exp(5), exp(5))
 
+    def test_pipeline(self):
+        data = sample(range(-10000, 10000), 50)
+        divide_by_2 = Function(lambda x: x / 2)
+        add_100 = Function(lambda x: x + 100)
+
+        self.assertEqual(list(map(divide_by_2 >> add_100 >> abs >> sqrt, data)),
+                         [sqrt(abs(add_100(divide_by_2(x)))) for x in data])
+
 
 class PredicateTestCase(unittest.TestCase):
     def setUp(self):
         # List to filter through
-        self.data = sample(range(10000), 50)
+        self.data = sample(range(-10000, 10000), 50)
 
         # Predicates
-        self.greater_than_100 = Predicate(lambda x: x > 100)
+        self.is_positive = Predicate(lambda x: x > 0)
 
         # Regular function
         self.is_even = (lambda x: x % 2 == 0)
 
     def test_invert(self):
-        data, greater_than_100 = self.data, self.greater_than_100
+        data, is_positive = self.data, self.is_positive
 
-        self.assertEqual(list(filter(~greater_than_100, data)),
-                         [x for x in data if not greater_than_100(x)])
+        self.assertEqual(list(filter(~is_positive, data)),
+                         [x for x in data if not is_positive(x)])
 
     def test_and(self):
-        data, greater_than_100, is_even = self.data, self.greater_than_100, self.is_even
+        data, is_positive, is_even = self.data, self.is_positive, self.is_even
 
-        self.assertEqual(list(filter(greater_than_100 & is_even, data)),
-                         [x for x in data if greater_than_100(x) and is_even(x)])
+        self.assertEqual(list(filter(is_positive & is_even, data)),
+                         [x for x in data if is_positive(x) and is_even(x)])
 
     def test_or(self):
-        data, greater_than_100, is_even = self.data, self.greater_than_100, self.is_even
+        data, is_positive, is_even = self.data, self.is_positive, self.is_even
 
-        self.assertEqual(list(filter(greater_than_100 | is_even, data)),
-                         [x for x in data if greater_than_100(x) or is_even(x)])
+        self.assertEqual(list(filter(is_positive | is_even, data)),
+                         [x for x in data if is_positive(x) or is_even(x)])
 
 
 if __name__ == '__main__':
