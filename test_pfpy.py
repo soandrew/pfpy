@@ -1,5 +1,8 @@
 import unittest
-from random import randint
+from random import randint, sample
+from math import factorial, exp
+from operator import gt
+from functools import partial
 from pfpy import *
 
 class FunctionTestCase(unittest.TestCase):
@@ -10,13 +13,10 @@ class FunctionTestCase(unittest.TestCase):
         self.d = randint(-10000, 10000)
 
         # Function
-        @unary
-        def f(x): return x + 6
+        self.f = Function(lambda x: x + 6)
 
         # Regular function
-        def g(x): return 2 * x
-
-        self.f, self.g = f, g
+        self.g = (lambda x: 2 * x)
 
     def test_positive_and_negative(self):
         f, x = self.f, self.x
@@ -92,11 +92,39 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual((1 * f)(x), f(x))                          # Scalar identity (One)
 
     def test_sum(self):
-        from math import factorial, exp
-
         series = (Function(lambda x, n=n: pow(x, n) / factorial(n)) for n in range(50))
         my_exp = sum(series)
         self.assertAlmostEqual(my_exp(5), exp(5))
+
+
+class PredicateTestCase(unittest.TestCase):
+    def setUp(self):
+        # List to filter through
+        self.data = sample(range(10000), 50)
+
+        # Predicates
+        self.greater_than_100 = Predicate(lambda x: x > 100)
+
+        # Regular function
+        self.is_even = (lambda x: x % 2 == 0)
+
+    def test_invert(self):
+        data, greater_than_100 = self.data, self.greater_than_100
+
+        self.assertEqual(list(filter(~greater_than_100, data)),
+                         [x for x in data if not greater_than_100(x)])
+
+    def test_and(self):
+        data, greater_than_100, is_even = self.data, self.greater_than_100, self.is_even
+
+        self.assertEqual(list(filter(greater_than_100 & is_even, data)),
+                         [x for x in data if greater_than_100(x) and is_even(x)])
+
+    def test_or(self):
+        data, greater_than_100, is_even = self.data, self.greater_than_100, self.is_even
+
+        self.assertEqual(list(filter(greater_than_100 | is_even, data)),
+                         [x for x in data if greater_than_100(x) or is_even(x)])
 
 
 if __name__ == '__main__':
