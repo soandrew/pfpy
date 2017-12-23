@@ -16,10 +16,7 @@ class FunctionTestCase(unittest.TestCase):
         # Regular function
         def g(x): return 2 * x
 
-        @unary
-        def h(x): return x ** 2
-
-        self.f, self.g, self.h = f, g, h
+        self.f, self.g = f, g
 
     def test_positive_and_negative(self):
         f, x = self.f, self.x
@@ -78,7 +75,10 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual(I(x), x)
 
     def test_vector_space(self):
-        f, g, h, x, c, d = self.f, Function(self.g), self.h, self.x, self.c, self.d
+        f, g, x, c, d = self.f, Function(self.g), self.x, self.c, self.d
+
+        @unary
+        def h(x): return x ** 2
 
         self.assertIs(type(f + g), Function)                        # Additive closure
         self.assertIs(type(c * f), Function)                        # Scalar closure
@@ -90,6 +90,14 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual((c * (f + g))(x), ((c * f) + (c * g))(x))  # Additive distributivity
         self.assertEqual(((c + d) * f)(x), ((c * f) + (d * f))(x))  # Scalar distributivity
         self.assertEqual((1 * f)(x), f(x))                          # Scalar identity (One)
+
+    def test_sum(self):
+        from math import factorial, exp
+
+        series = (Function(lambda x, n=n: pow(x, n) / factorial(n)) for n in range(50))
+        my_exp = sum(series)
+        self.assertAlmostEqual(my_exp(5), exp(5))
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
