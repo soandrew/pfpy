@@ -1,7 +1,7 @@
 import unittest
 from random import randint, sample
 from math import factorial, exp, sqrt
-from pfpy import Function, identity, zero
+from pfpy import Function, identity
 
 class FunctionTestCase(unittest.TestCase):
     def setUp(self):
@@ -66,11 +66,8 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual((g << f)(x), g(f(x)))
         self.assertEqual((g @ f)(x), g(f(x)))
 
-    def test_zero_and_identity(self):
+    def test_identity(self):
         x = self.x
-
-        self.assertEqual(zero(x), 0)
-        self.assertIs(type(zero), Function)
 
         self.assertEqual(identity(x), x)
         self.assertIs(type(identity), Function)
@@ -79,6 +76,7 @@ class FunctionTestCase(unittest.TestCase):
         f, g, x, c, d = self.f, Function(self.g), self.x, self.c, self.d
 
         h = Function(lambda x: x ** 2)
+        zero = Function(lambda x: 0)
 
         self.assertIs(type(f + g), Function)                        # Additive closure
         self.assertIs(type(c * f), Function)                        # Scalar closure
