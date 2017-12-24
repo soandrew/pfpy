@@ -1,7 +1,7 @@
 import unittest
 from random import randint, sample
 from math import factorial, exp, sqrt
-from pfpy import Function, I, Z
+from pfpy import Function, identity, zero
 
 class FunctionTestCase(unittest.TestCase):
     def setUp(self):
@@ -69,8 +69,11 @@ class FunctionTestCase(unittest.TestCase):
     def test_zero_and_identity(self):
         x = self.x
 
-        self.assertEqual(Z(x), 0)
-        self.assertEqual(I(x), x)
+        self.assertEqual(zero(x), 0)
+        self.assertIs(type(zero), Function)
+
+        self.assertEqual(identity(x), x)
+        self.assertIs(type(identity), Function)
 
     def test_vector_space(self):
         f, g, x, c, d = self.f, Function(self.g), self.x, self.c, self.d
@@ -81,8 +84,8 @@ class FunctionTestCase(unittest.TestCase):
         self.assertIs(type(c * f), Function)                        # Scalar closure
         self.assertEqual((f + g)(x), (g + f)(x))                    # Commutative
         self.assertEqual((f + (g + h))(x), ((f + g) + h)(x))        # Additive associativity
-        self.assertEqual((f + Z)(x), f(x))                          # Additive identity (Zero vector)
-        self.assertEqual((f + (-f))(x), Z(x))                       # Additive inverse
+        self.assertEqual((f + zero)(x), f(x))                       # Additive identity (Zero vector)
+        self.assertEqual((f + (-f))(x), zero(x))                    # Additive inverse
         self.assertEqual((c * (d * f))(x), ((c * d) * f)(x))        # Scalar associativity
         self.assertEqual((c * (f + g))(x), ((c * f) + (c * g))(x))  # Additive distributivity
         self.assertEqual(((c + d) * f)(x), ((c * f) + (d * f))(x))  # Scalar distributivity
@@ -90,7 +93,7 @@ class FunctionTestCase(unittest.TestCase):
 
     def test_sum(self):
         #series = (Function(lambda x, n=n: pow(x, n) / factorial(n)) for n in range(50))
-        series = ((1 / factorial(n)) * (I ^ n) for n in range(50))
+        series = ((1 / factorial(n)) * (identity ^ n) for n in range(50))
         my_exp = sum(series)
         self.assertAlmostEqual(my_exp(5), exp(5))
 

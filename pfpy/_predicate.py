@@ -1,6 +1,8 @@
 from collections.abc import Callable
 from functools import update_wrapper
 
+__all__ = ["Predicate", "predicate"]
+
 class Predicate(Callable):
     """Represent a predicate function."""
 

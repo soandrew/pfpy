@@ -2,6 +2,8 @@ from pfpy._function import Function
 from pfpy._predicate import Predicate
 from functools import update_wrapper, partial
 
+__all__ = ["curry"]
+
 def curry(n, cls=Function):
     """
     Decorator that transforms an n-ary function into a sequence of unary functions.

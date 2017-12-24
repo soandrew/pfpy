@@ -2,6 +2,8 @@ from collections.abc import Callable
 from numbers import Real
 from functools import update_wrapper
 
+__all__ = ["Function", "unary", "identity", "zero"]
+
 class Function(Callable):
     """Represents an unary function."""
 
@@ -138,11 +140,11 @@ def unary(f):
     return wrapper
 
 @unary
-def I(x):
+def identity(x):
     """Identity function."""
     return x
 
 @unary
-def Z(x):
+def zero(x):
     """Zero function."""
     return 0
