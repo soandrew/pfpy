@@ -1,7 +1,7 @@
 import unittest
 from random import randint, sample
 from math import factorial, exp, sqrt
-from pfpy import Function, identity
+from pfpy import Function, identity, constant
 
 class FunctionTestCase(unittest.TestCase):
     def setUp(self):
@@ -66,11 +66,17 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual((g << f)(x), g(f(x)))
         self.assertEqual((g @ f)(x), g(f(x)))
 
-    def test_identity(self):
+    def test_identity_and_constant(self):
         x = self.x
 
         self.assertEqual(identity(x), x)
         self.assertIs(type(identity), Function)
+
+    def test_constant(self):
+        c, d = self.c, self.d
+
+        self.assertEqual(constant(c)(d), c)
+        self.assertIs(type(constant(c)), Function)
 
     def test_vector_space(self):
         f, g, x, c, d = self.f, Function(self.g), self.x, self.c, self.d

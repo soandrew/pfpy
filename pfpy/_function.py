@@ -2,7 +2,7 @@ from collections.abc import Callable
 from numbers import Real
 from functools import update_wrapper
 
-__all__ = ["Function", "unary", "identity"]
+__all__ = ["Function", "unary", "identity", "constant"]
 
 class Function(Callable):
     """Represents an unary function."""
@@ -135,5 +135,10 @@ def unary(f):
 
 @unary
 def identity(x):
-    """Identity function."""
+    """Return x."""
     return x
+
+@unary
+def constant(x):
+    """Return a unary function that returns x."""
+    return Function(lambda _: x) 
