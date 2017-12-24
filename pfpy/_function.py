@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from numbers import Real
-from functools import update_wrapper, partial
+from functools import update_wrapper
 
 class Function(Callable):
     """Represents an unary function."""
@@ -131,88 +131,18 @@ class Function(Callable):
             return NotImplemented
         return other << self
 
-
-class Predicate(Callable):
-    """Represent a predicate function."""
-
-    def __init__(self, f):
-        """Create a new Predicate to represent predicate function f."""
-        self._f = f
-
-    # === Getters ===
-    @property
-    def f(self):
-        """Return the predicate function this Predicate represents."""
-        return self._f
-
-    # === Implement Callable ===
-    def __call__(self, obj):
-        return self.f(obj)
-
-    # === Unary operators ===
-    def __invert__(self):
-        return Predicate(lambda obj: not self.f(obj))
-
-    # === Binary operators ===
-    def __and__(self, other):
-        if not isinstance(other, Callable):
-            return NotImplemented
-        return Predicate(lambda obj: self.f(obj) and other(obj))
-
-    def __or__(self, other):
-        if not isinstance(other, Callable):
-            return NotImplemented
-        return Predicate(lambda obj: self.f(obj) or other(obj))
-
-    # === Reflected binary operators ===
-    def __rand__(self, other):
-        if not isinstance(other, Callable):
-            return NotImplemented
-        return self & other
-
-    def __ror__(self, other):
-        if not isinstance(other, Callable):
-            return NotImplemented
-        return self | other
-
 def unary(f):
     """Decorator that lifts an unary function into a Function."""
     wrapper = Function(f)
     update_wrapper(wrapper, f)
     return wrapper
 
-def predicate(f):
-    """Decorator that lifts a predicate function into a Predicate."""
-    wrapper = Predicate(f)
-    update_wrapper(wrapper, f)
-    return wrapper
-
-def curry(n, cls=Function):
-    """
-    Decorator that transforms an n-ary function into a sequence of unary functions.
-    Each unary function will be of type Function except for the last one which will
-    be of type cls.
-    """
-    def curry(f):
-        def curry(g, n):
-            if n == 0:  # No parameters. Pass in dummy argument in order to call function.
-                wrapper = cls(lambda x: g())
-            elif n == 1:  # 1 parameters left. Pass in argument to call function with.
-                wrapper = cls(lambda x: g(x))
-            else:  # >1 parameters left. Pass in argument for first unbound parameter in function.
-                wrapper = Function(lambda x: curry(partial(g, x), n - 1))
-            update_wrapper(wrapper, f)
-            return wrapper
-        return curry(f, n)
-    return curry
-
 @unary
 def I(x):
+    """Identity function."""
     return x
 
 @unary
 def Z(x):
+    """Zero function."""
     return 0
-
-if __name__ == '__main__':
-    pass
