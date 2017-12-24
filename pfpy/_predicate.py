@@ -10,30 +10,24 @@ class Predicate(Callable):
         """Create a new Predicate to represent predicate function f."""
         self._f = f
 
-    # === Getters ===
-    @property
-    def f(self):
-        """Return the predicate function this Predicate represents."""
-        return self._f
-
     # === Implement Callable ===
     def __call__(self, obj):
-        return self.f(obj)
+        return self._f(obj)
 
     # === Unary operators ===
     def __invert__(self):
-        return Predicate(lambda obj: not self.f(obj))
+        return Predicate(lambda obj: not self(obj))
 
     # === Binary operators ===
     def __and__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Predicate(lambda obj: self.f(obj) and other(obj))
+        return Predicate(lambda obj: self(obj) and other(obj))
 
     def __or__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Predicate(lambda obj: self.f(obj) or other(obj))
+        return Predicate(lambda obj: self(obj) or other(obj))
 
     # === Reflected binary operators ===
     def __rand__(self, other):

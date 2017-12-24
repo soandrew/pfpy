@@ -11,65 +11,59 @@ class Function(Callable):
         """Create a new Function to represent unary function f."""
         self._f = f
 
-    # === Getters ===
-    @property
-    def f(self):
-        """Return the unary function this Function represents."""
-        return self._f
-
     # === Implement Callable ====
     def __call__(self, obj):
-        return self.f(obj)
+        return self._f(obj)
 
     # === Unary operators ===
     def __pos__(self):
-        return Function(lambda obj: +self.f(obj))
+        return Function(lambda obj: +self(obj))
 
     def __neg__(self):
-        return Function(lambda obj: -self.f(obj))
+        return Function(lambda obj: -self(obj))
 
     # === Binary operators ===
     def __add__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) + other(obj))
+        return Function(lambda obj: self(obj) + other(obj))
 
     def __sub__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) - other(obj))
+        return Function(lambda obj: self(obj) - other(obj))
 
     def __mul__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) * other(obj))
+        return Function(lambda obj: self(obj) * other(obj))
 
     def __floordiv__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) // other(obj))
+        return Function(lambda obj: self(obj) // other(obj))
 
     def __truediv__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) / other(obj))
+        return Function(lambda obj: self(obj) / other(obj))
 
     def __pow__(self, other):
         if not isinstance(other, Real):
             return NotImplemented
-        return Function(lambda obj: self.f(obj) ** other)
+        return Function(lambda obj: self(obj) ** other)
 
     def __lshift__(self, other):
         """Return this Function composed with other."""
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(other(obj)))
+        return Function(lambda obj: self(other(obj)))
 
     def __rshift__(self, other):
         """Return other composed with this Function."""
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: other(self.f(obj)))
+        return Function(lambda obj: other(self(obj)))
 
     def __xor__(self, other):
         """Alias for ** operator."""
@@ -95,11 +89,11 @@ class Function(Callable):
     def __rsub__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: other(obj) - self.f(obj))
+        return Function(lambda obj: other(obj) - self(obj))
 
     def __rmul__(self, other):
         if isinstance(other, Real):
-            return Function(lambda obj: other * self.f(obj))  # Scalar multiplication
+            return Function(lambda obj: other * self(obj))  # Scalar multiplication
         elif isinstance(other, Callable):
             return self * other
         else:
@@ -108,24 +102,24 @@ class Function(Callable):
     def __rfloordiv__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: other(obj) // self.f(obj))
+        return Function(lambda obj: other(obj) // self(obj))
 
     def __rtruediv__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: other(obj) / self.f(obj))
+        return Function(lambda obj: other(obj) / self(obj))
 
     def __rlshift__(self, other):
         """Return other composed with this Function."""
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: other(self.f(obj)))
+        return Function(lambda obj: other(self(obj)))
 
     def __rrshift__(self, other):
         """Return this Function composed with other."""
         if not isinstance(other, Callable):
             return NotImplemented
-        return Function(lambda obj: self.f(other(obj)))
+        return Function(lambda obj: self(other(obj)))
 
     def __rmatmul__(self, other):
         """Alias for << operator."""
