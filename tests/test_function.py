@@ -101,7 +101,7 @@ class FunctionTestCase(unittest.TestCase):
         my_exp = sum(series)
         self.assertAlmostEqual(my_exp(5), exp(5))
 
-    def test_pipeline(self):
+    def test_mapping(self):
         data = sample(range(-10000, 10000), 50)
         divide_by_2 = Function(lambda x: x / 2)
         add_100 = Function(lambda x: x + 100)
