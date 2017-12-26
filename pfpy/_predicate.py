@@ -16,29 +16,29 @@ class Predicate(Callable):
 
     # === Unary operators ===
     def __invert__(self):
-        return Predicate(lambda obj: not self(obj))
+        return Predicate(lambda x: not self(x))
 
     # === Binary operators ===
     def __and__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Predicate(lambda obj: self(obj) and other(obj))
+        return Predicate(lambda x: self(x) and other(x))
 
     def __or__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return Predicate(lambda obj: self(obj) or other(obj))
+        return Predicate(lambda x: self(x) or other(x))
 
     # === Reflected binary operators ===
     def __rand__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return self & other
+        return Predicate(lambda x: other(x) and self(x))
 
     def __ror__(self, other):
         if not isinstance(other, Callable):
             return NotImplemented
-        return self | other
+        return Predicate(lambda x: other(x) or self(x))
 
 def predicate(f):
     """Decorator that lifts a predicate function into a Predicate."""
