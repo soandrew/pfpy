@@ -44,7 +44,7 @@ def rcurry(n, cls=Function):
                 wrapper = cls(lambda x: g())
             elif n == 1:  # 1 parameters left. Pass in argument to call function with.
                 wrapper = cls(lambda x: g(x))
-            else:  # >1 parameters left. Pass in argument for first unbound parameter in function.
+            else:  # >1 parameters left. Pass in argument for last unbound parameter in function.
                 wrapper = Function(lambda x: rcurry(rpartial(g, x), n - 1))
             update_wrapper(wrapper, f)
             return wrapper
