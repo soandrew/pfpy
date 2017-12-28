@@ -102,9 +102,8 @@ class FunctionTestCase(unittest.TestCase):
         self.assertAlmostEqual(my_exp(5), exp(5))
 
     def test_mapping(self):
+        f, g = self.f, self.g
         data = sample(range(-10000, 10000), 50)
-        divide_by_2 = Function(lambda x: x / 2)
-        add_100 = Function(lambda x: x + 100)
 
-        self.assertEqual(list(map(divide_by_2 >> add_100 >> abs >> sqrt, data)),
-                         [sqrt(abs(add_100(divide_by_2(x)))) for x in data])
+        self.assertEqual(list(map(f >> g >> abs >> sqrt, data)),
+                         [sqrt(abs(g(f(x)))) for x in data])

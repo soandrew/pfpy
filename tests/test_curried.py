@@ -1,6 +1,8 @@
 import unittest
 from random import randint, sample
 from pfpy.curried import *
+import functools
+import operator
 
 class CurriedTestCase(unittest.TestCase):
     def setUp(self):
@@ -50,3 +52,16 @@ class CurriedTestCase(unittest.TestCase):
         self.assertEqual(mul(a)(b), b * a)
         self.assertEqual(mod(a)(b), b % a)
         self.assertEqual(pow(a)(b), __builtins__["pow"](b, a))
+
+    def test_builtins(self):
+        data = self.data
+        is_even = (lambda x: x % 2 == 0)
+        times2 = (lambda x: 2 * x)
+        class Point():
+            x = 1
+            y = 2
+
+        self.assertEqual(list(map(times2)(data)), list(__builtins__["map"](times2, data)))
+        self.assertEqual(list(filter(is_even)(data)), list(__builtins__["filter"](is_even, data)))
+        self.assertEqual(reduce(operator.mul)(data), functools.reduce(operator.mul, data))
+        self.assertEqual(getattr("x")(Point), __builtins__["getattr"](Point, "x"))
