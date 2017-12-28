@@ -130,5 +130,5 @@ def identity(x):
 
 @unary
 def constant(x):
-    """Return a unary function that returns x."""
+    """Return an unary function that always returns x."""
     return Function(lambda _: x) 

@@ -13,7 +13,7 @@ def rpartial(f, *args):
 
 def curry(n, cls=Function):
     """
-    Decorator that transforms an n-ary function into a sequence of n unary functions
+    Decorator that transforms an n-ary function into a chain of n unary functions
     that partially applies the arguments of the original function from left to right.
     Each unary function will be of type Function except for the last one which will
     be of type cls.
@@ -33,7 +33,7 @@ def curry(n, cls=Function):
 
 def rcurry(n, cls=Function):
     """
-    Decorator that transforms an n-ary function into a sequence of n unary functions
+    Decorator that transforms an n-ary function into a chain of n unary functions
     that partially applies the arguments of the original function from right to left.
     Each unary function will be of type Function except for the last one which will
     be of type cls.

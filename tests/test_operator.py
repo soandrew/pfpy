@@ -49,4 +49,4 @@ class OperatorTestCase(unittest.TestCase):
         self.assertEqual(truediv(a)(b), b / a)
         self.assertEqual(mul(a)(b), b * a)
         self.assertEqual(mod(a)(b), b % a)
-        self.assertEqual(pow_(a)(b), pow(b, a))
+        self.assertEqual(pow(a)(b), __builtins__["pow"](b, a))
