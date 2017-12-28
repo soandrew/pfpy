@@ -1,8 +1,8 @@
 import unittest
 from random import randint, sample
-from pfpy.operator import *
+from pfpy.curried import *
 
-class OperatorTestCase(unittest.TestCase):
+class CurriedTestCase(unittest.TestCase):
     def setUp(self):
         self.a = randint(-10000, 10000)
         self.b = randint(-10000, 10000)
