@@ -19,9 +19,10 @@ class Predicate(Callable, Composable):
     # === Implement Composable ===
     def __matmul__(self, other):
         """Return this Predicate composed with other."""
-        if not isinstance(other, Callable):
-            return NotImplemented
-        return Predicate(lambda x: self(other(x)))
+        if isinstance(other, Callable):
+            return Predicate(lambda x: self(other(x)))
+        else:
+            return self(other)  # function application
 
     def __rshift__(self, other):
         """Return other composed with this Predicate."""
@@ -40,8 +41,6 @@ class Predicate(Callable, Composable):
 
     def __rrshift__(self, other):
         """Return this Predicate composed with other."""
-        if not isinstance(other, Callable):
-            return NotImplemented
         return self @ other
 
     # === Logical operators ===

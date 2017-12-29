@@ -53,18 +53,21 @@ class FunctionTestCase(unittest.TestCase):
         f, x, c = self.f, self.x, self.c
 
         self.assertEqual((f ** c)(x), f(x) ** c)
-        self.assertEqual((f ^ c)(x), f(x) ** c)
 
     def test_composition(self):
         f, g, x = self.f, self.g, self.x
 
-        self.assertEqual((f << g)(x), f(g(x)))
-        self.assertEqual((g >> f)(x), f(g(x)))
         self.assertEqual((f @ g)(x), f(g(x)))
+        self.assertEqual((g >> f)(x), f(g(x)))
 
-        self.assertEqual((f >> g)(x), g(f(x)))
-        self.assertEqual((g << f)(x), g(f(x)))
         self.assertEqual((g @ f)(x), g(f(x)))
+        self.assertEqual((f >> g)(x), g(f(x)))
+
+    def test_application(self):
+        f, x = self.f, self.x
+
+        self.assertEqual(f @ x, f(x))
+        self.assertEqual(x >> f, f(x))
 
     def test_identity_and_constant(self):
         x = self.x
