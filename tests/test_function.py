@@ -96,8 +96,7 @@ class FunctionTestCase(unittest.TestCase):
         self.assertEqual((1 * f)(x), f(x))                          # Scalar identity (One)
 
     def test_sum(self):
-        #series = (Function(lambda x, n=n: pow(x, n) / factorial(n)) for n in range(50))
-        series = ((1 / factorial(n)) * (identity ^ n) for n in range(50))
+        series = ((1 / factorial(n)) * (identity ** n) for n in range(25))
         my_exp = sum(series)
         self.assertAlmostEqual(my_exp(5), exp(5))
 

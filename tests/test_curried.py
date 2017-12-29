@@ -3,6 +3,7 @@ from random import randint, sample
 from pfpy.curried import *
 import functools
 import operator
+import itertools
 
 class CurriedTestCase(unittest.TestCase):
     def setUp(self):
@@ -61,7 +62,10 @@ class CurriedTestCase(unittest.TestCase):
             x = 1
             y = 2
 
-        self.assertEqual(list(map(times2)(data)), list(__builtins__["map"](times2, data)))
-        self.assertEqual(list(filter(is_even)(data)), list(__builtins__["filter"](is_even, data)))
+        self.assertEqual((list @ map(times2))(data), list(__builtins__["map"](times2, data)))
+        self.assertEqual((list @ filter(is_even))(data), list(__builtins__["filter"](is_even, data)))
         self.assertEqual(reduce(operator.mul)(data), functools.reduce(operator.mul, data))
+        self.assertEqual(sorted(is_even)(data), __builtins__["sorted"](data, key=is_even))
+        self.assertEqual([(key, list(group)) for key, group in groupby(is_even)(data)],
+                         [(key, list(group)) for key, group in itertools.groupby(data, key=is_even)])
         self.assertEqual(getattr("x")(Point), __builtins__["getattr"](Point, "x"))
