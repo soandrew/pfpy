@@ -66,6 +66,7 @@ class CurriedTestCase(unittest.TestCase):
         self.assertEqual((list @ filter(is_even))(data), list(__builtins__["filter"](is_even, data)))
         self.assertEqual(reduce(operator.mul)(data), functools.reduce(operator.mul, data))
         self.assertEqual(sorted(is_even)(data), __builtins__["sorted"](data, key=is_even))
+        self.assertEqual(apply(operator.add)(data[0:2]), operator.add(*data[0:2]))
         self.assertEqual([(key, list(group)) for key, group in groupby(is_even)(data)],
                          [(key, list(group)) for key, group in itertools.groupby(data, key=is_even)])
         self.assertEqual(getattr("x")(Point), __builtins__["getattr"](Point, "x"))

@@ -11,7 +11,7 @@ regular_operators =  ["add", "sub", "floordiv", "truediv", "mul", "matmul", "mod
 builtins = ["map", "filter", "reduce"]
 reverse_builtins = ["getattr", "groupby"]
 
-__all__ = predicate_operators + regular_operators + builtins + reverse_builtins + ["sorted"]
+__all__ = predicate_operators + regular_operators + builtins + reverse_builtins + ["sorted", "apply"]
 
 # Reassign each operator to their appropriately curried version
 (lt, le, eq, ne, ge, gt, is_, is_not, contains) = (rcurry(2, Predicate)(eval(op)) for op in predicate_operators)
@@ -23,8 +23,12 @@ __all__ = predicate_operators + regular_operators + builtins + reverse_builtins 
 (map, filter, reduce) = (curry(2)(eval(f)) for f in builtins)
 (getattr, groupby) = (rcurry(2)(eval(f)) for f in reverse_builtins)
 
-# Manually curry sorted
+# Manually curry sorted and apply
 builtin_sorted = sorted
 @curry(2)
 def sorted(key, iterable):
     return builtin_sorted(iterable, key=key)
+
+@curry(2)
+def apply(f, args):
+    return f(*args)
