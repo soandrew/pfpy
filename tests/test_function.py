@@ -66,7 +66,6 @@ class FunctionTestCase(unittest.TestCase):
     def test_application(self):
         f, x = self.f, self.x
 
-        self.assertEqual(f @ x, f(x))
         self.assertEqual(x >> f, f(x))
 
     def test_identity_and_constant(self):

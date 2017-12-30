@@ -19,10 +19,9 @@ class Function(Callable, Composable):
     # === Implement Composable ===
     def __matmul__(self, other):
         """Return this Function composed with other."""
-        if isinstance(other, Callable):
-            return Function(lambda x: self(other(x)))
-        else:
-            return self(other)  # function application
+        if not isinstance(other, Callable):
+            return NotImplemented
+        return Function(lambda x: self(other(x)))
 
     def __rshift__(self, other):
         """Return other composed with this Function."""
@@ -41,7 +40,10 @@ class Function(Callable, Composable):
 
     def __rrshift__(self, other):
         """Return this Function composed with other."""
-        return self @ other
+        if isinstance(other, Callable):
+            return self @ other
+        else:
+            return self(other)  # function application
 
     # === Arithmetic operators ===
     def __pos__(self):

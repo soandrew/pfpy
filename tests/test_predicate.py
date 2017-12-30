@@ -40,7 +40,6 @@ class PredicateTestCase(unittest.TestCase):
     def test_application(self):
         x, is_positive = self.x, self.is_positive
 
-        self.assertEqual(is_positive @ x, is_positive(x))
         self.assertEqual(x >> is_positive, is_positive(x))
 
     def test_filtering(self):
