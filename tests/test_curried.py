@@ -10,8 +10,10 @@ class CurriedTestCase(unittest.TestCase):
         self.a = randint(-10000, 10000)
         self.b = randint(-10000, 10000)
         self.none = None
-        self.data = sample(range(0, 50), 50)
+        self.data = sample(range(-50, 50), 100)
         self.x = randint(0, 50)
+        self.is_even = (lambda x: x % 2 == 0)
+        self.times2 = (lambda x: 2 * x)
 
     def test_comparison_ops(self):
         a, b, none = self.a, self.b, self.none
@@ -54,19 +56,27 @@ class CurriedTestCase(unittest.TestCase):
         self.assertEqual(mod(a)(b), b % a)
         self.assertEqual(pow(a)(b), __builtins__["pow"](b, a))
 
-    def test_builtins(self):
-        data = self.data
-        is_even = (lambda x: x % 2 == 0)
-        times2 = (lambda x: 2 * x)
+
+    def test_class_ops(self):
         class Point():
             x = 1
             y = 2
 
+        self.assertEqual(getattr("x")(Point), __builtins__["getattr"](Point, "x"))
+
+    def test_itertools(self):
+        data, is_even, times2 = self.data, self.is_even, self.times2
+
         self.assertEqual((list @ map(times2))(data), list(__builtins__["map"](times2, data)))
         self.assertEqual((list @ filter(is_even))(data), list(__builtins__["filter"](is_even, data)))
-        self.assertEqual(reduce(operator.mul)(data), functools.reduce(operator.mul, data))
-        self.assertEqual(sorted(is_even)(data), __builtins__["sorted"](data, key=is_even))
+        self.assertEqual([(key, list(group)) for key, group in groupby(abs)(data)],
+                         [(key, list(group)) for key, group in itertools.groupby(data, key=abs)])
+
+    def test_functools(self):
+        data = self.data
+        
         self.assertEqual(apply(operator.add)(data[0:2]), operator.add(*data[0:2]))
-        self.assertEqual([(key, list(group)) for key, group in groupby(is_even)(data)],
-                         [(key, list(group)) for key, group in itertools.groupby(data, key=is_even)])
-        self.assertEqual(getattr("x")(Point), __builtins__["getattr"](Point, "x"))
+        self.assertEqual(reduce(operator.mul)(data), functools.reduce(operator.mul, data))
+        self.assertEqual(sorted(abs)(data), __builtins__["sorted"](data, key=abs))
+        self.assertEqual(max(abs)(data), __builtins__["max"](data, key=abs))
+        self.assertEqual(min(abs)(data), __builtins__["min"](data, key=abs))
