@@ -126,6 +126,7 @@ The following table summarizes the supported composition operators and their cor
 | -------- | ------------------------ |
 | `f @ g`  | `f(g(x))`                |
 | `f >> g` | `g(f(x))`                |
+
 *These do not change the [operator precedence](https://docs.python.org/3/reference/expressions.html#operator-summary) of `@` or `>>`.
 
 ---
@@ -254,7 +255,7 @@ For convenience, this package provides the `pfpy.curried` module which comes wit
 The following table summarizes the curried operators and their corresponding application rules.
 
 | Operation             | Syntax           | Application rule    |
-| --------------------- | ---------- ----- | ------------------- |
+| --------------------- | ---------------- | ------------------- |
 | Less than             | `lt(a)(b)`       | `b < a`             |
 | Less than or equal    | `le(a)(b)`       | `b <= a`            |
 | Equality              | `eq(a)(b)`       | `b == a`            |
