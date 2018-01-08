@@ -10,7 +10,7 @@ python setup.py install
 ```
 
 ## Requirements
- - Python 3.3+
+ - Python 3.5+
 
 ---
 
